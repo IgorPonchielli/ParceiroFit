@@ -1,0 +1,53 @@
+query ListAllExercises @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  exercises {
+    id
+    name
+    muscleGroup
+    description
+  }
+}
+
+query GetMyWorkoutLogs @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  workoutLogs(where: {userId: {eq_expr: "auth.uid"}}) {
+    id
+    logDate
+    notes
+    workoutRoutine {
+      name
+    }
+    exerciseEntries {
+      exercise {
+        name
+      }
+      sets
+      reps
+      weightUsed
+    }
+  }
+}
+
+mutation CreateNewWorkoutRoutine($name: String!, $description: String) @auth(level: USER) {
+  workoutRoutine_insert(data: {
+    userId_expr: "auth.uid",
+    name: $name,
+    description: $description,
+    createdAt_expr: "request.time"
+  }) {
+    id
+  }
+}
+
+mutation AddExerciseEntryToWorkoutLog($workoutLogId: UUID!, $exerciseId: UUID!, $sets: Int!, $reps: Int!, $weightUsed: Float!, $duration: Int, $distance: Float) @auth(level: USER) {
+  exerciseEntry_insert(data: {
+    workoutLogId: $workoutLogId,
+    exerciseId: $exerciseId,
+    sets: $sets,
+    reps: $reps,
+    weightUsed: $weightUsed,
+    duration: $duration,
+    distance: $distance,
+    createdAt_expr: "request.time"
+  }) {
+    id
+  }
+}
