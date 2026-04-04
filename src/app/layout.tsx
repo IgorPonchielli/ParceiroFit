@@ -15,6 +15,8 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "ParceiroFit App",
   description: "Plataforma SaaS Fitness",
+  manifest: "/manifest.json", // Adicionado para suporte ao PWA
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
@@ -33,3 +35,13 @@ export default function RootLayout({
     </html>
   );
 }
+
+<script dangerouslySetInnerHTML={{
+  __html: `
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+  `
+}} />

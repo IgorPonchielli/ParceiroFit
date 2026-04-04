@@ -1,64 +1,163 @@
-import { ArrowLeft, Camera, Send } from "lucide-react";
+import { ArrowLeft, Search, MoreHorizontal, MessageSquare, Plus } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function Chat() {
+export default function ChatInbox() {
+  const threads = [
+    {
+      id: "1",
+      name: "Marcos (Aluno)",
+      avatar: "MC",
+      lastMessage: "Professor, terminei a semana 2. Olha como está secando! Posso manter o carbo baixo?",
+      date: "15 Abr 2023",
+      comments: 5,
+      unread: true,
+      avatarColor: "bg-emerald-500/20 text-emerald-400",
+      image: "https://i.pravatar.cc/150?img=11"
+    },
+    {
+      id: "2",
+      name: "Joana Dias",
+      avatar: "JD",
+      lastMessage: "Qual a substituição para o agachamento livre? Minha academia não tem gaiola.",
+      date: "14 Abr 2023",
+      comments: 2,
+      unread: false,
+      avatarColor: "bg-purple-500/20 text-purple-400",
+      image: "https://i.pravatar.cc/150?img=5"
+    },
+    {
+      id: "3",
+      name: "Lucas Fernandes",
+      avatar: "LF",
+      lastMessage: "Mandei as fotos da evolução lá no perfil. Acho que perdi massa magra.",
+      date: "12 Abr 2023",
+      comments: 8,
+      unread: false,
+      avatarColor: "bg-blue-500/20 text-blue-400",
+      image: "https://i.pravatar.cc/150?img=12"
+    },
+    {
+      id: "4",
+      name: "Sabrina Costa",
+      avatar: "SC",
+      lastMessage: "Bom dia prof! O treino de ontem foi matador, mal consigo andar hoje haha",
+      date: "10 Abr 2023",
+      comments: 0,
+      unread: false,
+      avatarColor: "bg-pink-500/20 text-pink-400",
+      image: "https://i.pravatar.cc/150?img=9"
+    }
+  ];
+
   return (
     <div className="flex-1 flex flex-col bg-gray-950 h-screen w-full relative overflow-hidden">
-      <div className="bg-gray-900 border-b border-gray-800 z-10 w-full">
-        <div className="max-w-4xl mx-auto p-4 flex items-center pt-8 md:pt-4">
-          <Link href="/dashboard" className="mr-4 text-gray-400 hover:text-white transition">
-            <ArrowLeft />
-          </Link>
-          <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center mr-3 font-bold text-emerald-400">
-            MC
+      <div className="bg-gray-900 border-b border-gray-800 z-10 w-full relative pt-8 md:pt-4 p-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center">
+              <Link href="/dashboard" className="mr-4 text-gray-400 hover:text-white transition">
+                <ArrowLeft />
+              </Link>
+              <h1 className="text-xl md:text-2xl font-bold">Fórum / Mensagens</h1>
+            </div>
+            <div className="flex items-center gap-3">
+              <button className="p-2 bg-gray-800 rounded-full text-gray-400 hover:text-white transition">
+                <MoreHorizontal className="w-5 h-5" />
+              </button>
+            </div>
           </div>
-          <div>
-            <h3 className="font-bold text-sm md:text-base">Marcos (Aluno)</h3>
-            <p className="text-xs text-emerald-400">Online</p>
+          
+          <div className="flex flex-col md:flex-row gap-4 justify-between">
+            <div className="flex items-center gap-2 bg-gray-800 p-1 rounded-xl w-full md:w-auto">
+              <button className="px-6 py-2 bg-gray-700 text-white rounded-lg text-sm font-medium transition shadow-sm w-1/2 md:w-auto">
+                Recentes
+              </button>
+              <button className="px-6 py-2 text-gray-400 hover:text-white rounded-lg text-sm font-medium transition w-1/2 md:w-auto">
+                Discussões
+              </button>
+            </div>
+            
+            <div className="relative w-full md:w-64">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+              <input 
+                type="text" 
+                placeholder="Buscar mensagens..." 
+                className="w-full bg-gray-800 border border-gray-700 rounded-xl pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 text-white transition"
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto w-full pb-24">
-        <div className="max-w-4xl mx-auto p-4 space-y-6">
-          {/* Mensagem Aluno */}
-          <div className="flex flex-col items-start max-w-[85%] md:max-w-[70%]">
-            <div className="bg-gray-800 p-3 md:p-4 rounded-2xl rounded-tl-sm text-sm md:text-base shadow-md">
-              Professor, terminei a semana 2. Olha como está secando! Posso manter o carbo baixo?
-            </div>
-            <div className="mt-2 w-32 h-40 md:w-48 md:h-64 bg-gray-800 rounded-xl overflow-hidden border border-gray-700 relative shadow-md">
-              <Image src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=400&h=600&fit=crop" fill alt="Attachment" className="object-cover" />
-            </div>
-            <span className="text-[10px] md:text-xs text-gray-500 mt-1">10:42</span>
-          </div>
-
-          {/* Mensagem Prof */}
-          <div className="flex flex-col items-end self-end max-w-[85%] md:max-w-[70%] ml-auto">
-            <div className="bg-emerald-600 p-3 md:p-4 rounded-2xl rounded-tr-sm text-sm md:text-base text-white shadow-md">
-              Excelente evolução Marcos! Segura o carbo por mais 3 dias e na sexta a gente faz um refeed. Vou liberar o módulo de abdômen pra você amanhã.
-            </div>
-            <span className="text-[10px] md:text-xs text-gray-500 mt-1">11:15</span>
+      <div className="flex-1 overflow-y-auto w-full pb-24 md:pb-6 p-4">
+        <div className="max-w-4xl mx-auto space-y-4">
+          <div className="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden shadow-xl">
+            {threads.map((thread, i) => {
+              return thread.id === "1" ? (
+                <Link href={`/chat/${thread.id}`} key={thread.id}>
+                  <div className={`p-4 sm:p-5 flex gap-4 hover:bg-gray-800 transition cursor-pointer ${i !== threads.length - 1 ? 'border-b border-gray-800' : ''}`}>
+                    <div className="shrink-0 relative">
+                      <div className="w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden border border-gray-700 relative">
+                        <Image src={thread.image} alt={thread.name} fill className="object-cover" />
+                      </div>
+                      {thread.unread && (
+                        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-gray-900"></span>
+                      )}
+                    </div>
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-start mb-1">
+                        <h3 className={`font-bold text-sm sm:text-base truncate pr-2 ${thread.unread ? 'text-white' : 'text-gray-300'}`}>
+                          {thread.name}
+                        </h3>
+                        <span className="text-xs text-gray-500 whitespace-nowrap">{thread.date}</span>
+                      </div>
+                      
+                      <p className={`text-sm truncate mb-2 ${thread.unread ? 'text-gray-300 font-medium' : 'text-gray-500'}`}>
+                        {thread.lastMessage}
+                      </p>
+                      
+                      <div className="flex items-center gap-4 text-xs text-gray-500 font-medium">
+                        <div className="flex items-center gap-1.5 hover:text-emerald-400 transition">
+                          <MessageSquare className="w-3.5 h-3.5" /> 
+                          {thread.comments} {thread.comments === 1 ? 'comentário' : 'comentários'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ) : (
+                <div key={thread.id} className={`p-4 sm:p-5 flex gap-4 opacity-50 cursor-not-allowed ${i !== threads.length - 1 ? 'border-b border-gray-800' : ''}`}>
+                  <div className="shrink-0 relative">
+                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden border border-gray-700 relative">
+                      <Image src={thread.image} alt={thread.name} fill className="object-cover" />
+                    </div>
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start mb-1">
+                      <h3 className={`font-bold text-sm sm:text-base truncate pr-2 ${thread.unread ? 'text-white' : 'text-gray-300'}`}>
+                        {thread.name}
+                      </h3>
+                      <span className="text-xs text-gray-500 whitespace-nowrap">{thread.date}</span>
+                    </div>
+                    
+                    <p className={`text-sm truncate mb-2 ${thread.unread ? 'text-gray-300 font-medium' : 'text-gray-500'}`}>
+                      {thread.lastMessage}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
 
-      {/* Input Area */}
-      <div className="fixed bottom-0 w-full bg-gray-900 border-t border-gray-800 z-10">
-        <div className="max-w-4xl mx-auto p-4 pb-6 md:pb-4 flex items-center gap-2">
-          <button className="p-2 md:p-3 text-gray-400 hover:text-emerald-400 bg-gray-800 rounded-full transition">
-            <Camera className="w-5 h-5 md:w-6 md:h-6" />
-          </button>
-          <input
-            type="text"
-            placeholder="Escreva sua mensagem..."
-            className="flex-1 bg-gray-800 rounded-full px-4 py-3 text-sm md:text-base focus:outline-none focus:ring-1 focus:ring-emerald-500 text-white shadow-inner"
-          />
-          <button className="p-2 md:p-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full transition shadow-lg">
-            <Send className="w-5 h-5 md:w-6 md:h-6" />
-          </button>
-        </div>
-      </div>
+      {/* Floating Action Button (Mobile) */}
+      <button className="md:hidden fixed bottom-24 right-4 w-14 h-14 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-lg transition">
+        <Plus className="w-6 h-6" />
+      </button>
     </div>
   );
 }
