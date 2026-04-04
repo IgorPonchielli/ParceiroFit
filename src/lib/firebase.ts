@@ -4,10 +4,10 @@ import { getAnalytics, isSupported } from "firebase/analytics";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCAqTKUrM6LmEfnpkGRJMOrQua9byNPHcQ",
-  authDomain: "parceirofit-350a8.firebaseapp.com",
-  projectId: "parceirofit-350a8",
-  storageBucket: "parceirofit-350a8.firebasestorage.app",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: "983881062008",
   appId: "1:983881062008:web:ffb7dafa38d061fe367f8d",
   measurementId: "G-5Q5KQC5QMR"
