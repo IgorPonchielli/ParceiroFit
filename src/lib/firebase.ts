@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -17,6 +18,9 @@ const firebaseConfig = {
 // Check if an app is already initialized to avoid duplicate initialization in Next.js development mode
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
+// Initialize Firestore
+const db = getFirestore(app);
+
 // Initialize Analytics conditionally (only runs in browser environments and if supported)
 let analytics = null;
 if (typeof window !== "undefined") {
@@ -27,4 +31,4 @@ if (typeof window !== "undefined") {
   });
 }
 
-export { app, analytics };
+export { app, analytics, db };
