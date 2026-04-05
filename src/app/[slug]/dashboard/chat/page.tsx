@@ -1,8 +1,15 @@
+"use client";
+
 import { ArrowLeft, Search, MoreHorizontal, MessageSquare, Plus } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useParams } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 
-export default function ChatInbox() {
+export default function ProfessionalChatInbox() {
+  const { slug } = useParams();
+  const { userProfile } = useAuth();
+
   const threads = [
     {
       id: "1",
@@ -25,41 +32,19 @@ export default function ChatInbox() {
       unread: false,
       avatarColor: "bg-purple-500/20 text-purple-400",
       image: "https://i.pravatar.cc/150?img=5"
-    },
-    {
-      id: "3",
-      name: "Lucas Fernandes",
-      avatar: "LF",
-      lastMessage: "Mandei as fotos da evolução lá no perfil. Acho que perdi massa magra.",
-      date: "12 Abr 2023",
-      comments: 8,
-      unread: false,
-      avatarColor: "bg-blue-500/20 text-blue-400",
-      image: "https://i.pravatar.cc/150?img=12"
-    },
-    {
-      id: "4",
-      name: "Sabrina Costa",
-      avatar: "SC",
-      lastMessage: "Bom dia prof! O treino de ontem foi matador, mal consigo andar hoje haha",
-      date: "10 Abr 2023",
-      comments: 0,
-      unread: false,
-      avatarColor: "bg-pink-500/20 text-pink-400",
-      image: "https://i.pravatar.cc/150?img=9"
     }
   ];
 
   return (
     <div className="flex-1 flex flex-col bg-gray-950 h-screen w-full relative overflow-hidden">
       <div className="bg-gray-900 border-b border-gray-800 z-10 w-full relative pt-8 md:pt-4 p-4">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto text-white">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
-              <Link href="/dashboard" className="mr-4 text-gray-400 hover:text-white transition">
+              <Link href={`/${slug}/dashboard`} className="mr-4 text-gray-400 hover:text-white transition">
                 <ArrowLeft />
               </Link>
-              <h1 className="text-xl md:text-2xl font-bold">Fórum / Mensagens</h1>
+              <h1 className="text-xl md:text-2xl font-bold uppercase tracking-tight">Fórum / Alunos</h1>
             </div>
             <div className="flex items-center gap-3">
               <button className="p-2 bg-gray-800 rounded-full text-gray-400 hover:text-white transition">
@@ -82,7 +67,7 @@ export default function ChatInbox() {
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
               <input 
                 type="text" 
-                placeholder="Buscar mensagens..." 
+                placeholder="Buscar aluno..." 
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 text-white transition"
               />
             </div>
@@ -94,45 +79,15 @@ export default function ChatInbox() {
         <div className="max-w-4xl mx-auto space-y-4">
           <div className="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden shadow-xl">
             {threads.map((thread, i) => {
-              return thread.id === "1" ? (
-                <Link href={`/chat/${thread.id}`} key={thread.id}>
-                  <div className={`p-4 sm:p-5 flex gap-4 hover:bg-gray-800 transition cursor-pointer ${i !== threads.length - 1 ? 'border-b border-gray-800' : ''}`}>
-                    <div className="shrink-0 relative">
-                      <div className="w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden border border-gray-700 relative">
-                        <Image src={thread.image} alt={thread.name} fill className="object-cover" />
-                      </div>
-                      {thread.unread && (
-                        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-gray-900"></span>
-                      )}
-                    </div>
-                    
-                    <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-start mb-1">
-                        <h3 className={`font-bold text-sm sm:text-base truncate pr-2 ${thread.unread ? 'text-white' : 'text-gray-300'}`}>
-                          {thread.name}
-                        </h3>
-                        <span className="text-xs text-gray-500 whitespace-nowrap">{thread.date}</span>
-                      </div>
-                      
-                      <p className={`text-sm truncate mb-2 ${thread.unread ? 'text-gray-300 font-medium' : 'text-gray-500'}`}>
-                        {thread.lastMessage}
-                      </p>
-                      
-                      <div className="flex items-center gap-4 text-xs text-gray-500 font-medium">
-                        <div className="flex items-center gap-1.5 hover:text-emerald-400 transition">
-                          <MessageSquare className="w-3.5 h-3.5" /> 
-                          {thread.comments} {thread.comments === 1 ? 'comentário' : 'comentários'}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ) : (
-                <div key={thread.id} className={`p-4 sm:p-5 flex gap-4 opacity-50 cursor-not-allowed ${i !== threads.length - 1 ? 'border-b border-gray-800' : ''}`}>
+              return (
+                <div key={thread.id} className={`p-4 sm:p-5 flex gap-4 hover:bg-gray-800 transition cursor-pointer text-white ${i !== threads.length - 1 ? 'border-b border-gray-800' : ''}`}>
                   <div className="shrink-0 relative">
                     <div className="w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden border border-gray-700 relative">
                       <Image src={thread.image} alt={thread.name} fill className="object-cover" />
                     </div>
+                    {thread.unread && (
+                      <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-gray-900"></span>
+                    )}
                   </div>
                   
                   <div className="flex-1 min-w-0">
@@ -146,6 +101,13 @@ export default function ChatInbox() {
                     <p className={`text-sm truncate mb-2 ${thread.unread ? 'text-gray-300 font-medium' : 'text-gray-500'}`}>
                       {thread.lastMessage}
                     </p>
+                    
+                    <div className="flex items-center gap-4 text-xs text-gray-500 font-medium">
+                      <div className="flex items-center gap-1.5 hover:text-emerald-400 transition">
+                        <MessageSquare className="w-3.5 h-3.5" /> 
+                        {thread.comments} {thread.comments === 1 ? 'comentário' : 'comentários'}
+                      </div>
+                    </div>
                   </div>
                 </div>
               );

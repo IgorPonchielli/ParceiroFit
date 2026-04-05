@@ -7,6 +7,8 @@ export interface User {
   uid: string;
   email: string;
   displayName: string;
+  avatarUrl?: string; // Add this line
+  slug?: string; // Adicionando slug para roteamento profissional
   role: Role;
   paymentStatus: PaymentStatus;
   createdAt: Timestamp;
@@ -23,7 +25,6 @@ export interface Workspace {
   professionalId: string;
   slug: string;
   biography: string;
-  avatarUrl: string;
   coverUrl: string;
   theme: WorkspaceTheme;
   mpAccessToken: string;
