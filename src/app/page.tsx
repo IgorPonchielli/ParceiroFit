@@ -21,9 +21,21 @@ export default function Login() {
         ? `/${userProfile.slug}/dashboard` 
         : "/paywall";
 
-      // Só redireciona se estivermos na raiz OU se o destino for diferente da URL atual
-      if (currentPath === "/" || currentPath !== targetPath) {
+      // Adicionamos "/" no final do targetPath para comparar com o window.location.pathname do Next.js se trailingSlash: true
+      const normalizedTargetPath = targetPath.endsWith("/") ? targetPath : `${targetPath}/`;
+      const normalizedCurrentPath = currentPath.endsWith("/") ? currentPath : `${currentPath}/`;
+
+      if (normalizedCurrentPath === "/" || normalizedCurrentPath !== normalizedTargetPath) {
+        console.log("Redirecting to:", targetPath);
         router.push(targetPath);
+      } else {
+        // Se já estamos no path correto mas a tela de login ainda está aparecendo (devido ao rewrite),
+        // forçamos um reload ou uma navegação de nível de janela para "destravar" o Next.js
+        console.log("Already on target path but still in login view. Forcing refresh.");
+        // Pequeno delay para garantir que o Firebase Auth persistiu
+        setTimeout(() => {
+          window.location.href = targetPath;
+        }, 500);
       }
     }
   }, [currentUser, userProfile, router]);

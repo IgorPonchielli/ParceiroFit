@@ -15,20 +15,25 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     if (!loading) {
       const currentPath = window.location.pathname;
 
+      const normalizedPath = currentPath.endsWith("/") ? currentPath : `${currentPath}/`;
+      
       if (!currentUser) {
         // Usuário não está logado
-        if (currentPath !== "/") {
+        if (normalizedPath !== "/") {
+          console.log("No user, redirecting back to root.");
           router.push("/");
         }
       } else if (userProfile && userProfile.paymentStatus !== "paid") {
         // Usuário logado, mas não pagou
-        if (currentPath !== "/paywall") {
+        if (normalizedPath !== "/paywall/") {
           router.push("/paywall");
         }
       } else if (userProfile && urlSlug && userProfile.slug !== urlSlug) {
         // O slug na URL não pertence ao profissional logado
         const targetPath = `/${userProfile.slug}/dashboard`;
-        if (currentPath !== targetPath) {
+        const normalizedTarget = targetPath.endsWith("/") ? targetPath : `${targetPath}/`;
+        if (normalizedPath !== normalizedTarget) {
+          console.log(`Mismatching slug. Targeting: ${targetPath}`);
           router.push(targetPath);
         }
       }
