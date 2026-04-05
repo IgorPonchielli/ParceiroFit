@@ -13,6 +13,13 @@ export default function Login() {
   const [error, setError] = useState("");
   const { login, currentUser, userProfile } = useAuth();
   const router = useRouter();
+  const [isHome, setIsHome] = useState<boolean | null>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    setIsHome(window.location.pathname === "/");
+  }, []);
 
   useEffect(() => {
     if (currentUser && userProfile) {
@@ -54,6 +61,12 @@ export default function Login() {
       setIsLoading(false);
     }
   };
+
+  // Se for um sub-caminho (ex: /igor-ponchielli/), não mostramos o login
+  // Isso permite que o roteador do Next.js carregue o [slug]/page.tsx (StudentView)
+  if (!isClient || isHome === false) {
+    return null;
+  }
 
   return (
     <div className="flex-1 flex flex-col justify-center items-center p-6 bg-gray-950 min-h-screen">
