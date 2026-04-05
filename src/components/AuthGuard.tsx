@@ -13,16 +13,24 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!loading) {
+      const currentPath = window.location.pathname;
+
       if (!currentUser) {
         // Usuário não está logado
-        router.push("/");
+        if (currentPath !== "/") {
+          router.push("/");
+        }
       } else if (userProfile && userProfile.paymentStatus !== "paid") {
         // Usuário logado, mas não pagou
-        router.push("/paywall");
+        if (currentPath !== "/paywall") {
+          router.push("/paywall");
+        }
       } else if (userProfile && urlSlug && userProfile.slug !== urlSlug) {
         // O slug na URL não pertence ao profissional logado
-        // Redireciona para o slug correto (ou apenas bloqueia, aqui redirecionamos para segurança)
-        router.push(`/${userProfile.slug}/dashboard`);
+        const targetPath = `/${userProfile.slug}/dashboard`;
+        if (currentPath !== targetPath) {
+          router.push(targetPath);
+        }
       }
     }
   }, [currentUser, userProfile, loading, router, urlSlug]);

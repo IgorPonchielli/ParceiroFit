@@ -16,10 +16,14 @@ export default function Login() {
 
   useEffect(() => {
     if (currentUser && userProfile) {
-      if (userProfile.paymentStatus === "paid") {
-        router.push(`/${userProfile.slug}/dashboard`);
-      } else {
-        router.push("/paywall");
+      const currentPath = window.location.pathname;
+      const targetPath = userProfile.paymentStatus === "paid" 
+        ? `/${userProfile.slug}/dashboard` 
+        : "/paywall";
+
+      // Só redireciona se estivermos na raiz OU se o destino for diferente da URL atual
+      if (currentPath === "/" || currentPath !== targetPath) {
+        router.push(targetPath);
       }
     }
   }, [currentUser, userProfile, router]);

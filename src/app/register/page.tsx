@@ -31,7 +31,7 @@ export default function Register() {
   };
 
   const isSlugValid = (slug: string) => {
-    return /^[a-z0-0-]+$/.test(slug) && !slug.includes(" ") && !slug.includes("_");
+    return /^[a-z0-9-]+$/.test(slug) && !slug.includes(" ") && !slug.includes("_");
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -133,7 +133,7 @@ export default function Register() {
                 type="text"
                 placeholder="joao-personal"
                 value={formData.slug}
-                onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/\s/g, "-") })}
+                onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/[\s_]/g, "-").replace(/[^a-z0-9-]/g, "") })}
                 className="w-full bg-gray-800 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-gray-700 transition-all placeholder:text-gray-600"
                 required
               />
