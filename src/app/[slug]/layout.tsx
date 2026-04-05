@@ -3,7 +3,8 @@ export function generateStaticParams() {
     { slug: "p" }, 
     { slug: "igor-teste-slug" }, 
     { slug: "igor-personal-trainer-unique" },
-    { slug: "test-loop-user-123" }
+    { slug: "test-loop-user-123" },
+    { slug: "igorponchielli" }
   ];
 }
 
