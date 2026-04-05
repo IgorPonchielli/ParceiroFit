@@ -38,8 +38,7 @@ export default function StudentView() {
     return (
       <div className="flex-1 flex flex-col justify-center items-center h-screen bg-gray-950">
         <div 
-          className="w-12 h-12 border-4 rounded-full animate-spin"
-          style={{ borderColor: `${workspace?.theme?.primary || "#10b981"}33`, borderTopColor: workspace?.theme?.primary || "#10b981" }}
+          className="w-12 h-12 border-4 rounded-full animate-spin border-emerald-500/30 border-t-emerald-500"
         ></div>
       </div>
     );
@@ -52,8 +51,7 @@ export default function StudentView() {
         <p className="text-gray-400 mb-8">Workspace não encontrada ou endereço incorreto.</p>
         <Link 
           href="/" 
-          className="text-white px-6 py-3 rounded-xl font-bold"
-          style={{ backgroundColor: workspace?.theme?.primary || "#10b981" }}
+          className="bg-emerald-500 text-white px-6 py-3 rounded-xl font-bold"
         >
           Voltar para Início
         </Link>
