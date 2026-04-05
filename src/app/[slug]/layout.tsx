@@ -1,5 +1,10 @@
 export function generateStaticParams() {
-  return [{ slug: "p" }, { slug: "igor-teste-slug" }];
+  return [
+    { slug: "p" }, 
+    { slug: "igor-teste-slug" }, 
+    { slug: "igor-personal-trainer-unique" },
+    { slug: "test-loop-user-123" }
+  ];
 }
 
 export default function WorkspaceLayout({
