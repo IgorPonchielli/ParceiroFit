@@ -6,7 +6,7 @@ import { Timestamp } from "firebase/firestore";
 import { auth } from "@/lib/firebase";
 import { userService } from "@/services/userService";
 import { workspaceService } from "@/services/workspaceService";
-import { User as AppUser } from "@/types/models";
+import { User as AppUser, Role } from "@/types/models";
 
 interface AuthContextType {
   currentUser: FirebaseUser | null;
@@ -14,7 +14,7 @@ interface AuthContextType {
   loading: boolean;
   logout: () => Promise<void>;
   login: (email: string, pass: string) => Promise<void>;
-  register: (email: string, pass: string, displayName: string, slug: string) => Promise<void>;
+  register: (email: string, pass: string, displayName: string, slug?: string, role?: Role) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -83,7 +83,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     await signInWithEmailAndPassword(auth, email, pass);
   };
 
-  const register = async (email: string, pass: string, displayName: string, slug: string) => {
+  const register = async (email: string, pass: string, displayName: string, slug: string = "", role: Role = "professional") => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
     const uid = userCredential.user.uid;
     const now = Timestamp.now();
@@ -93,26 +93,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       uid,
       email,
       displayName,
-      role: "professional",
-      paymentStatus: "paid",
+      role,
+      paymentStatus: role === "professional" ? "paid" : "paid", // For now students are always "paid" or we can default to paid
       avatarUrl: "",
-      slug: slug.toLowerCase().trim(),
+      slug: slug ? slug.toLowerCase().trim() : "",
       createdAt: now,
       updatedAt: now,
     });
 
-    // 2. Criar Workspace Padrão
-    await workspaceService.createWorkspace(uid, {
-      professionalId: uid,
-      slug: slug.toLowerCase().trim(),
-      biography: "Transformando vidas através do movimento. Consultoria online, treinos periodizados e nutrição na medida certa. 💪",
-      coverUrl: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&h=600&fit=crop",
-      mpAccessToken: "Mercado Pago OAuth Token (Mockup)",
-      theme: {
-        primary: "#10b981", // Emerald 500
-        secondary: "#064e3b", // Emerald 900
-      }
-    });
+    // 2. Criar Workspace Padrão apenas para Profissionais
+    if (role === "professional") {
+      await workspaceService.createWorkspace(uid, {
+        professionalId: uid,
+        slug: slug.toLowerCase().trim(),
+        biography: "Transformando vidas através do movimento. Consultoria online, treinos periodizados e nutrição na medida certa. 💪",
+        coverUrl: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&h=600&fit=crop",
+        mpAccessToken: "Mercado Pago OAuth Token (Mockup)",
+        theme: {
+          primary: "#10b981", // Emerald 500
+          secondary: "#064e3b", // Emerald 900
+        }
+      });
+    }
   };
 
   return (

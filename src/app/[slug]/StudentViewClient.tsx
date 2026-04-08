@@ -1,16 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowLeft, Unlock, Play, Crown, Lock, PlaySquare, Calendar, MessageCircle } from "lucide-react";
+import { ArrowLeft, Unlock, Play, Crown, Lock, PlaySquare, Calendar, MessageCircle, LogIn } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { AuthDropdown } from "@/components/AuthDropdown";
+import { useParams, useRouter } from "next/navigation";
 import { workspaceService } from "@/services/workspaceService";
 import { userService } from "@/services/userService";
 import { Workspace, User } from "@/types/models";
 
 export default function StudentViewClient() {
   const { slug } = useParams();
+  const router = useRouter();
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [professional, setProfessional] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -70,12 +73,16 @@ export default function StudentViewClient() {
           className="object-cover opacity-60" 
           priority 
         />
-        <Link href="/" className="absolute top-4 left-4 bg-black/50 p-2 rounded-full backdrop-blur hover:bg-black/70 transition">
+        <button 
+          onClick={() => router.back()} 
+          className="absolute top-4 left-4 bg-black/50 p-2 rounded-full backdrop-blur hover:bg-black/70 transition z-50"
+          aria-label="Voltar"
+        >
           <ArrowLeft className="w-5 h-5 text-white" />
-        </Link>
+        </button>
         
         {/* Desktop Navigation */}
-        <div className="absolute top-4 right-4 hidden md:flex items-center gap-8 bg-black/50 px-8 py-3 rounded-full backdrop-blur z-20">
+        <div className="absolute top-4 right-20 hidden md:flex items-center gap-8 bg-black/50 px-8 py-3 rounded-full backdrop-blur z-20 transition-all">
           <button 
             className="flex items-center gap-2 font-medium transition"
             style={{ color: workspace.theme?.primary || "#10b981" }}
@@ -90,6 +97,11 @@ export default function StudentViewClient() {
               <MessageCircle className="w-5 h-5" /> Prof
             </button>
           </Link>
+        </div>
+
+        {/* User Auth Menu (Mobile e Desktop) */}
+        <div className="absolute top-4 right-4 z-50">
+          <AuthDropdown />
         </div>
       </div>
       
