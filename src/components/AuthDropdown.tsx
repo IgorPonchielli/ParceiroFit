@@ -7,7 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export function AuthDropdown() {
+export function AuthDropdown({ activePlanTitle }: { activePlanTitle?: string } = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { logout, userProfile, currentUser } = useAuth();
@@ -36,7 +36,15 @@ export function AuthDropdown() {
   const avatarUrl = userProfile?.avatarUrl || "https://i.pravatar.cc/150?img=11";
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="flex items-center gap-3 relative" ref={dropdownRef}>
+      {activePlanTitle && (
+        <div className="hidden md:flex flex-col items-end mr-1">
+          <span className="text-[10px] text-emerald-500/70 border border-emerald-500/30 px-2 py-0.5 rounded-full uppercase font-bold tracking-wider mb-1">
+            Plano Atual
+          </span>
+          <span className="text-sm text-white font-bold">{activePlanTitle}</span>
+        </div>
+      )}
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center justify-center transition-all duration-300 ${
@@ -55,17 +63,17 @@ export function AuthDropdown() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-56 bg-gray-950 border border-gray-800 rounded-2xl shadow-2xl py-3 z-[60] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="absolute top-full right-0 mt-3 w-56 bg-gray-950 border border-gray-800 rounded-2xl shadow-2xl py-3 z-[60] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
           {currentUser ? (
             <>
-              <div className="px-5 py-3 border-b border-gray-900 mb-2">
-                <p className="text-sm text-white font-bold truncate">
-                  {userProfile?.displayName || "Usuário"}
-                </p>
-                <p className="text-[10px] text-gray-500 truncate uppercase tracking-widest mt-1">
-                  {currentUser?.email || ""}
-                </p>
-              </div>
+              <Link 
+                href="/profile" 
+                onClick={() => setIsOpen(false)} 
+                className="w-full text-left px-5 py-3 border-b border-gray-900 mb-2 hover:bg-emerald-500/10 transition-colors flex flex-col items-start justify-center gap-1"
+              >
+                <span className="text-sm font-bold text-white truncate">{userProfile?.displayName || "Usuário"}</span>
+                <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider">Editar Perfil</span>
+              </Link>
               <button 
                 onClick={handleLogout}
                 className="w-full text-left px-5 py-3 text-red-400 hover:bg-red-500/10 transition-colors flex items-center gap-3 text-sm font-medium"

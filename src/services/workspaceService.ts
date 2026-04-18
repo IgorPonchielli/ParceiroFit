@@ -42,6 +42,25 @@ export const workspaceService = {
   },
 
   /**
+   * Busca um workspace pelo ID do profissional dono.
+   */
+  async getWorkspaceByProfessionalId(professionalId: string): Promise<Workspace | null> {
+    try {
+      const q = query(collection(db, WORKSPACES_COLLECTION), where("professionalId", "==", professionalId));
+      const querySnapshot = await getDocs(q);
+      
+      if (!querySnapshot.empty) {
+        const docSnap = querySnapshot.docs[0];
+        return { id: docSnap.id, ...docSnap.data() } as Workspace;
+      }
+      return null;
+    } catch (error) {
+      console.error("Erro ao buscar workspace pelo ID do profissional: ", error);
+      throw error;
+    }
+  },
+
+  /**
    * Cria um workspace para um novo profissional.
    */
   async createWorkspace(workspaceId: string, data: Omit<Workspace, "id">): Promise<void> {

@@ -9,13 +9,18 @@ import { AuthDropdown } from "@/components/AuthDropdown";
 import { useParams, useRouter } from "next/navigation";
 import { workspaceService } from "@/services/workspaceService";
 import { userService } from "@/services/userService";
-import { Workspace, User } from "@/types/models";
+import { subscriptionService } from "@/services/subscriptionService";
+import { planService } from "@/services/planService";
+import { Workspace, User, Subscription } from "@/types/models";
 
 export default function StudentViewClient() {
   const { slug } = useParams();
   const router = useRouter();
+  const { currentUser } = useAuth();
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [professional, setProfessional] = useState<User | null>(null);
+  const [activeSubscription, setActiveSubscription] = useState<Subscription | null>(null);
+  const [activePlanTitle, setActivePlanTitle] = useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -27,6 +32,17 @@ export default function StudentViewClient() {
           setWorkspace(ws);
           const prof = await userService.getUser(ws.professionalId);
           setProfessional(prof);
+          
+          if (currentUser) {
+            const sub = await subscriptionService.getActiveSubscription(currentUser.uid, ws.professionalId);
+            setActiveSubscription(sub);
+            if (sub) {
+              const plan = await planService.getPlan(sub.plan_id);
+              if (plan) {
+                setActivePlanTitle(plan.title);
+              }
+            }
+          }
         }
       } catch (error) {
         console.error("Erro ao buscar dados do workspace:", error);
@@ -35,7 +51,7 @@ export default function StudentViewClient() {
       }
     }
     fetchData();
-  }, [slug]);
+  }, [slug, currentUser]);
 
   if (isLoading) {
     return (
@@ -101,7 +117,7 @@ export default function StudentViewClient() {
 
         {/* User Auth Menu (Mobile e Desktop) */}
         <div className="absolute top-4 right-4 z-50">
-          <AuthDropdown />
+          <AuthDropdown activePlanTitle={activePlanTitle} />
         </div>
       </div>
       
@@ -135,16 +151,25 @@ export default function StudentViewClient() {
           {workspace.biography}
         </p>
 
-        {/* Botão Assinar */}
-        <button 
-          className="w-full md:w-auto md:px-8 transition-all text-white font-bold py-3 md:py-4 rounded-xl md:rounded-full mb-8 shadow-lg flex justify-center items-center gap-2 md:text-lg active:scale-95"
-          style={{ 
-            backgroundColor: workspace.theme?.primary || "#10b981",
-            boxShadow: `0 10px 15px -3px ${workspace.theme?.primary || "#10b981"}33`
-          }}
-        >
-          <Unlock className="w-5 h-5" /> Assinar Plano Mensal - R$ 99
-        </button>
+        {/* Botão Assinar - Apenas se não tiver assinatura ativa */}
+        {!activeSubscription && (
+          <button 
+            onClick={() => {
+              if (!currentUser) {
+                router.push("/login");
+              } else {
+                router.push(`/${slug}/planos`);
+              }
+            }}
+            className="w-full md:w-auto md:px-8 transition-all text-white font-bold py-3 md:py-4 rounded-xl md:rounded-full mb-8 shadow-lg flex justify-center items-center gap-2 md:text-lg active:scale-95"
+            style={{ 
+              backgroundColor: workspace.theme?.primary || "#10b981",
+              boxShadow: `0 10px 15px -3px ${workspace.theme?.primary || "#10b981"}33`
+            }}
+          >
+            <Unlock className="w-5 h-5" /> Confira os Planos
+          </button>
+        )}
 
         {/* Módulos (Mockup por enquanto) */}
         <h2 className="font-bold mb-4 flex items-center gap-2 md:text-xl text-white">

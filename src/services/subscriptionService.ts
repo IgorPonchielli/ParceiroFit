@@ -47,6 +47,24 @@ export const subscriptionService = {
   },
 
   /**
+   * Busca todas as assinaturas ativas de um cliente (usuário aluno).
+   */
+  async getActiveSubscriptionsByClient(client_uid: string): Promise<Subscription[]> {
+    try {
+      const q = query(
+        collection(db, SUBSCRIPTIONS_COLLECTION),
+        where("client_uid", "==", client_uid),
+        where("status", "==", "active")
+      );
+      const querySnapshot = await getDocs(q);
+      return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Subscription[];
+    } catch (error) {
+      console.error("Erro ao buscar as assinaturas do usuário: ", error);
+      throw error;
+    }
+  },
+
+  /**
    * Cria uma nova assinatura.
    */
   async createSubscription(data: Omit<Subscription, "id" | "createdAt" | "updatedAt">): Promise<string> {
