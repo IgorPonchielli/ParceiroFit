@@ -20,7 +20,7 @@ interface RichSubscription {
 }
 
 export default function ProfileClient() {
-  const { currentUser, userProfile } = useAuth();
+  const { currentUser, userProfile, loading } = useAuth();
   const router = useRouter();
   
   const [displayName, setDisplayName] = useState("");
@@ -30,6 +30,12 @@ export default function ProfileClient() {
   const [richSubs, setRichSubs] = useState<RichSubscription[]>([]);
   const [loadingSubs, setLoadingSubs] = useState(true);
   const [cancelingId, setCancelingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!loading && !currentUser) {
+      router.push("/login");
+    }
+  }, [loading, currentUser, router]);
 
   useEffect(() => {
     if (userProfile) {
