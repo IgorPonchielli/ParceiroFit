@@ -269,19 +269,15 @@ export default function DashboardClient() {
 
                   // Get Latest Update Date
                   let lastUpdatedDate: Date | null = null;
-                  sessionContents.forEach(c => {
-                    if (c.updatedAt && 'toDate' in c.updatedAt) {
-                      const date = c.updatedAt.toDate();
-                      if (!lastUpdatedDate || date > lastUpdatedDate) {
-                        lastUpdatedDate = date;
-                      }
-                    } else if (c.createdAt && 'toDate' in c.createdAt) {
-                      const date = c.createdAt.toDate();
+                  for (const c of sessionContents) {
+                    const timestamp = c.updatedAt || c.createdAt;
+                    if (timestamp && typeof timestamp === 'object' && 'toDate' in timestamp) {
+                      const date = (timestamp as any).toDate();
                       if (!lastUpdatedDate || date > lastUpdatedDate) {
                         lastUpdatedDate = date;
                       }
                     }
-                  });
+                  }
 
                   // Get Latest Video Thumbnail
                   const latestVideo = sessionContents.sort((a, b) => {
