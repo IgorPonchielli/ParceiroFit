@@ -239,11 +239,11 @@ export default function ProfileClient() {
                              </button>
                            </Link>
                            <button 
-                             onClick={() => handleCancelSubscription(sub.id)}
-                             disabled={cancelingId === sub.id}
+                             onClick={() => sub.id && handleCancelSubscription(sub.id)}
+                             disabled={!!sub.id && cancelingId === sub.id}
                              className="w-full border border-gray-800 text-gray-400 font-bold rounded-xl py-2 flex items-center justify-center gap-2 transition hover:text-red-400 hover:border-red-500/30 hover:bg-red-500/10 active:scale-95 text-xs disabled:opacity-50"
                            >
-                             {cancelingId === sub.id ? <Loader2 className="w-4 h-4 animate-spin" /> : "Cancelar Assinatura"}
+                             {sub.id && cancelingId === sub.id ? <Loader2 className="w-4 h-4 animate-spin" /> : "Cancelar Assinatura"}
                            </button>
                         </div>
                       </div>
