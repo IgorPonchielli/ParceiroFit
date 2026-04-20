@@ -98,7 +98,7 @@ export default function StudentViewClient() {
         </button>
         
         {/* Desktop Navigation */}
-        <div className="absolute top-4 right-20 hidden md:flex items-center gap-8 bg-black/50 px-8 py-3 rounded-full backdrop-blur z-20 transition-all">
+        <div className="absolute top-4 right-4 hidden md:flex items-center gap-8 bg-black/50 px-8 py-3 rounded-full backdrop-blur z-20 transition-all">
           <button 
             className="flex items-center gap-2 font-medium transition"
             style={{ color: workspace.theme?.primary || "#10b981" }}
@@ -113,10 +113,12 @@ export default function StudentViewClient() {
               <MessageCircle className="w-5 h-5" /> Prof
             </button>
           </Link>
+          <div className="h-8 w-px bg-gray-700/50 mx-2"></div>
+          <AuthDropdown activePlanTitle={activePlanTitle} />
         </div>
 
-        {/* User Auth Menu (Mobile e Desktop) */}
-        <div className="absolute top-4 right-4 z-50">
+        {/* User Auth Menu (Mobile) */}
+        <div className="absolute top-4 right-4 z-50 md:hidden bg-black/50 px-4 py-2 rounded-full backdrop-blur">
           <AuthDropdown activePlanTitle={activePlanTitle} />
         </div>
       </div>

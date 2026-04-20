@@ -37,14 +37,12 @@ export function AuthDropdown({ activePlanTitle }: { activePlanTitle?: string } =
 
   return (
     <div className="flex items-center gap-3 relative" ref={dropdownRef}>
-      {activePlanTitle && (
-        <div className="hidden md:flex flex-col items-end mr-1">
-          <span className="text-[10px] text-emerald-500/70 border border-emerald-500/30 px-2 py-0.5 rounded-full uppercase font-bold tracking-wider mb-1">
-            Plano Atual
-          </span>
-          <span className="text-sm text-white font-bold">{activePlanTitle}</span>
-        </div>
-      )}
+      <div className="flex flex-col items-center mr-1 gap-0.5">
+        <span className="text-[10px] text-emerald-500/70 border border-emerald-500/30 px-2 py-0.5 rounded-full uppercase font-bold tracking-wider">
+          Plano Atual
+        </span>
+        <span className="text-sm text-white font-bold">{activePlanTitle || "Gratuito"}</span>
+      </div>
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center justify-center transition-all duration-300 ${
