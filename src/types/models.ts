@@ -20,6 +20,12 @@ export interface WorkspaceTheme {
   secondary: string;
 }
 
+export interface Session {
+  id: string;
+  title: string;
+  description: string;
+}
+
 export interface Workspace {
   id?: string;
   professionalId: string;
@@ -28,6 +34,7 @@ export interface Workspace {
   coverUrl: string;
   theme: WorkspaceTheme;
   mpAccessToken: string;
+  sessions?: Session[];
 }
 
 export interface Content {
@@ -39,6 +46,7 @@ export interface Content {
   youtube_id?: string; // Preenchido apenas se o tipo for "video"
   is_free: boolean;
   allowed_plans: string[]; // Lista de IDs de planos
+  session_ids?: string[]; // IDs das sessões (playlists) em que o conteúdo aparece
   article_media?: string[]; // URLs de imagens para artigos
   createdAt: Timestamp;
   updatedAt: Timestamp;

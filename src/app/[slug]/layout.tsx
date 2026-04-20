@@ -1,7 +1,8 @@
 export function generateStaticParams() {
   return [
     { slug: "p" },
-    { slug: "igorponchielli" }
+    { slug: "igorponchielli" },
+    { slug: "test-prof-99" }
   ];
 }
 

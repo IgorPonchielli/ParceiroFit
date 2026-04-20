@@ -152,7 +152,7 @@ export default function PlanosClient() {
         {/* Header */}
         <div className="flex items-center mb-8 gap-4 pt-4">
           <Link href={`/${slug}/dashboard`}>
-            <button className="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-800 transition">
+            <button className="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-800 transition-all cursor-pointer hover:scale-110">
               <ArrowLeft className="w-6 h-6" />
             </button>
           </Link>
@@ -242,7 +242,7 @@ export default function PlanosClient() {
                   <button 
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold p-3 rounded-xl flex justify-center items-center gap-2 transition disabled:opacity-50"
+                    className="w-full bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold p-3 rounded-xl flex justify-center items-center gap-2 transition-all disabled:opacity-50 cursor-pointer hover:scale-[1.02]"
                   >
                     {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                     {editingPlanId ? "Atualizar" : "Criar Plano"}
@@ -252,7 +252,7 @@ export default function PlanosClient() {
                     <button
                       type="button"
                       onClick={resetForm}
-                      className="w-full mt-2 bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium p-3 rounded-xl transition text-sm"
+                      className="w-full mt-2 bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium p-3 rounded-xl transition-all text-sm cursor-pointer hover:scale-[1.02]"
                     >
                       Cancelar Edição
                     </button>
@@ -292,7 +292,7 @@ export default function PlanosClient() {
                       <div className="flex gap-2 border-t border-gray-800 pt-4 mt-2">
                         <button 
                           onClick={() => editPlan(plan)}
-                          className="flex-1 bg-gray-800 hover:bg-gray-700 text-white rounded-xl py-2 flex items-center justify-center gap-2 text-sm transition"
+                          className="flex-1 bg-gray-800 hover:bg-gray-700 text-white rounded-xl py-2 flex items-center justify-center gap-2 text-sm transition-all cursor-pointer hover:scale-105"
                         >
                           <Edit2 className="w-4 h-4" /> Editar
                         </button>
@@ -300,7 +300,7 @@ export default function PlanosClient() {
                         <button 
                           onClick={() => handleDelete(plan.id!)}
                           disabled={isDeleting === plan.id}
-                          className="w-12 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 hover:border-red-500/40 rounded-xl py-2 flex items-center justify-center transition disabled:opacity-50"
+                          className="w-12 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 hover:border-red-500/40 rounded-xl py-2 flex items-center justify-center transition-all disabled:opacity-50 cursor-pointer hover:scale-105"
                           title="Excluir Plano"
                         >
                           {isDeleting === plan.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}

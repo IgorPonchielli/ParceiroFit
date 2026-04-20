@@ -41,13 +41,13 @@ export default function ProfessionalChatInboxClient() {
         <div className="max-w-4xl mx-auto text-white">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
-              <Link href={`/${slug}/dashboard`} className="mr-4 text-gray-400 hover:text-white transition">
+              <Link href={`/${slug}/dashboard`} className="mr-4 text-gray-400 hover:text-white transition-all cursor-pointer hover:scale-110">
                 <ArrowLeft />
               </Link>
               <h1 className="text-xl md:text-2xl font-bold uppercase tracking-tight">Fórum / Alunos</h1>
             </div>
             <div className="flex items-center gap-3">
-              <button className="p-2 bg-gray-800 rounded-full text-gray-400 hover:text-white transition">
+              <button className="p-2 bg-gray-800 rounded-full text-gray-400 hover:text-white transition-all cursor-pointer hover:scale-110">
                 <MoreHorizontal className="w-5 h-5" />
               </button>
             </div>
@@ -55,10 +55,10 @@ export default function ProfessionalChatInboxClient() {
           
           <div className="flex flex-col md:flex-row gap-4 justify-between">
             <div className="flex items-center gap-2 bg-gray-800 p-1 rounded-xl w-full md:w-auto">
-              <button className="px-6 py-2 bg-gray-700 text-white rounded-lg text-sm font-medium transition shadow-sm w-1/2 md:w-auto">
+              <button className="px-6 py-2 bg-gray-700 text-white rounded-lg text-sm font-medium transition-all shadow-sm w-1/2 md:w-auto cursor-pointer hover:scale-105">
                 Recentes
               </button>
-              <button className="px-6 py-2 text-gray-400 hover:text-white rounded-lg text-sm font-medium transition w-1/2 md:w-auto">
+              <button className="px-6 py-2 text-gray-400 hover:text-white rounded-lg text-sm font-medium transition-all w-1/2 md:w-auto cursor-pointer hover:scale-105">
                 Discussões
               </button>
             </div>
@@ -117,7 +117,7 @@ export default function ProfessionalChatInboxClient() {
       </div>
 
       {/* Floating Action Button (Mobile) */}
-      <button className="md:hidden fixed bottom-24 right-4 w-14 h-14 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-lg transition">
+      <button className="md:hidden fixed bottom-24 right-4 w-14 h-14 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-lg transition-all cursor-pointer hover:scale-110">
         <Plus className="w-6 h-6" />
       </button>
     </div>

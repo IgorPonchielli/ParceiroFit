@@ -45,7 +45,7 @@ export function AuthDropdown({ activePlanTitle }: { activePlanTitle?: string } =
       </div>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center justify-center transition-all duration-300 ${
+        className={`flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-105 ${
           currentUser 
             ? "w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-emerald-500 overflow-hidden" 
             : "w-10 h-10 md:w-12 md:h-12 bg-black/50 backdrop-blur rounded-full border border-gray-800 hover:bg-black/70"
@@ -74,7 +74,7 @@ export function AuthDropdown({ activePlanTitle }: { activePlanTitle?: string } =
               </Link>
               <button 
                 onClick={handleLogout}
-                className="w-full text-left px-5 py-3 text-red-400 hover:bg-red-500/10 transition-colors flex items-center gap-3 text-sm font-medium"
+                className="w-full text-left px-5 py-3 text-red-400 hover:bg-red-500/10 transition-all cursor-pointer flex items-center gap-3 text-sm font-medium"
               >
                 <LogOut className="w-4 h-4" />
                 Sair da Conta

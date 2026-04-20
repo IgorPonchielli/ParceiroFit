@@ -1,6 +1,6 @@
-import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where, arrayUnion } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Workspace } from "@/types/models";
+import { Workspace, Session } from "@/types/models";
 
 const WORKSPACES_COLLECTION = "workspaces";
 
@@ -82,6 +82,42 @@ export const workspaceService = {
       await updateDoc(docRef, data);
     } catch (error) {
       console.error("Erro ao atualizar workspace: ", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Adiciona uma nova sessão à lista de sessões da workspace de um profissional (Atômico)
+   */
+  async addSessionToWorkspace(professionalId: string, session: Session): Promise<void> {
+    try {
+      const ws = await this.getWorkspaceByProfessionalId(professionalId);
+      if (!ws || !ws.id) throw new Error("Workspace não encontrada para este profissional.");
+      
+      const docRef = doc(db, WORKSPACES_COLLECTION, ws.id);
+      await updateDoc(docRef, { sessions: arrayUnion(session) });
+    } catch (error) {
+      console.error("Erro ao adicionar sessão à workspace: ", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Atualiza os dados (título, descrição) de uma sessão existente na workspace.
+   */
+  async updateSessionInWorkspace(professionalId: string, updatedSession: Session): Promise<void> {
+    try {
+      const ws = await this.getWorkspaceByProfessionalId(professionalId);
+      if (!ws || !ws.id) throw new Error("Workspace não encontrada para este profissional.");
+      
+      const newSessions = (ws.sessions || []).map(s => 
+        s.id === updatedSession.id ? updatedSession : s
+      );
+
+      const docRef = doc(db, WORKSPACES_COLLECTION, ws.id);
+      await updateDoc(docRef, { sessions: newSessions });
+    } catch (error) {
+      console.error("Erro ao atualizar sessão na workspace: ", error);
       throw error;
     }
   }

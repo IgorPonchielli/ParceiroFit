@@ -38,7 +38,7 @@ export function ProfileDropdown() {
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden border-2 border-emerald-500 relative bg-gray-800 transition-transform hover:scale-105"
+        className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden border-2 border-emerald-500 relative bg-gray-800 transition-all cursor-pointer hover:scale-105"
       >
         <Image src={avatarUrl} alt="Profile" fill className="object-cover" />
       </button>
@@ -55,7 +55,7 @@ export function ProfileDropdown() {
           </div>
           <button 
             onClick={handleLogout}
-            className="w-full text-left px-4 py-2 text-red-500 hover:bg-gray-800 transition-colors flex items-center gap-2 text-sm"
+            className="w-full text-left px-4 py-2 text-red-500 hover:bg-gray-800 transition-all cursor-pointer flex items-center gap-2 text-sm"
           >
             <LogOut className="w-4 h-4" />
             Sair

@@ -7,7 +7,9 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { planService } from "@/services/planService";
 import { contentService } from "@/services/contentService";
-import { Plan, Content } from "@/types/models";
+import { workspaceService } from "@/services/workspaceService";
+import { Plan, Content, Session } from "@/types/models";
+import { SessionSelector } from "@/components/dashboard/SessionSelector";
 
 export default function EditarConteudoClient() {
   const { userProfile, loading: authLoading } = useAuth();
@@ -24,7 +26,9 @@ export default function EditarConteudoClient() {
   const [url, setUrl] = useState("");
   const [isFree, setIsFree] = useState(true);
   const [allowedPlans, setAllowedPlans] = useState<string[]>([]);
+  const [sessionIds, setSessionIds] = useState<string[]>([]);
   const [availablePlans, setAvailablePlans] = useState<Plan[]>([]);
+  const [newSessionsToSave, setNewSessionsToSave] = useState<Session[]>([]);
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -59,6 +63,7 @@ export default function EditarConteudoClient() {
           setDescription(fetchedContent.description || "");
           setIsFree(fetchedContent.is_free);
           setAllowedPlans(fetchedContent.allowed_plans || []);
+          setSessionIds(fetchedContent.session_ids || []);
           if (fetchedContent.type === "video" && fetchedContent.youtube_id) {
             setUrl(`https://youtu.be/${fetchedContent.youtube_id}`);
           }
@@ -99,11 +104,20 @@ export default function EditarConteudoClient() {
     try {
       if (!title.trim()) throw new Error("O título é obrigatório");
       
+      // 1. Salvar sessões criadas em memória nesta tela
+      if (newSessionsToSave.length > 0 && userProfile?.uid) {
+        const promises = newSessionsToSave.map(session => 
+          workspaceService.addSessionToWorkspace(userProfile.uid, session)
+        );
+        await Promise.all(promises);
+      }
+
       const updateData: any = {
         title,
         description,
         is_free: isFree,
         allowed_plans: isFree ? [] : allowedPlans,
+        session_ids: sessionIds,
       };
 
       if (content.type === "video") {
@@ -156,7 +170,7 @@ export default function EditarConteudoClient() {
         <div className="flex items-center justify-between mb-8 pt-4">
           <div className="flex items-center gap-4">
             <Link href={`/${slug}/dashboard`}>
-              <button className="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-800 transition">
+              <button className="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-800 transition-all cursor-pointer hover:scale-110">
                 <ArrowLeft className="w-6 h-6" />
               </button>
             </Link>
@@ -173,7 +187,7 @@ export default function EditarConteudoClient() {
              type="button" 
              onClick={handleDelete}
              disabled={isDeleting || isSubmitting}
-             className="bg-red-500/10 hover:bg-red-500/20 text-red-500 px-4 py-3 rounded-xl flex items-center gap-2 transition disabled:opacity-50"
+             className="bg-red-500/10 hover:bg-red-500/20 text-red-500 px-4 py-3 rounded-xl flex items-center gap-2 transition-all disabled:opacity-50 cursor-pointer hover:scale-105"
              title="Deletar Conteúdo"
           >
              {isDeleting ? <Loader2 className="w-5 h-5 animate-spin"/> : <Trash2 className="w-5 h-5" />}
@@ -242,6 +256,13 @@ export default function EditarConteudoClient() {
             </div>
           </div>
 
+          <SessionSelector 
+            professionalId={userProfile?.uid || ""} 
+            selectedSessionIds={sessionIds} 
+            onChange={setSessionIds} 
+            onNewSessionCreated={(session) => setNewSessionsToSave(prev => [...prev, session])}
+          />
+
           {/* Configuração de Acesso */}
           <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8 space-y-6">
             <h3 className="font-bold text-white text-lg border-b border-gray-800 pb-4">
@@ -306,14 +327,14 @@ export default function EditarConteudoClient() {
 
           <div className="flex justify-end gap-4 pt-4">
              <Link href={`/${slug}/dashboard`}>
-                <button type="button" className="px-6 py-4 rounded-xl text-gray-400 font-medium hover:text-white transition">
+                <button type="button" className="px-6 py-4 rounded-xl text-gray-400 font-medium hover:text-white transition-all cursor-pointer hover:scale-105">
                   Cancelar
                 </button>
              </Link>
              <button 
                 type="submit"
                 disabled={isSubmitting || success || isDeleting}
-                className="bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold px-8 py-4 rounded-xl flex items-center gap-2 transition-colors disabled:opacity-50"
+                className="bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold px-8 py-4 rounded-xl flex items-center gap-2 transition-all disabled:opacity-50 cursor-pointer hover:scale-[1.02]"
               >
                 {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                 {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}

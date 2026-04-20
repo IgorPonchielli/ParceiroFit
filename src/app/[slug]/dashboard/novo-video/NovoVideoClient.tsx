@@ -7,7 +7,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { planService } from "@/services/planService";
 import { contentService } from "@/services/contentService";
-import { Plan } from "@/types/models";
+import { workspaceService } from "@/services/workspaceService";
+import { Plan, Session } from "@/types/models";
+import { SessionSelector } from "@/components/dashboard/SessionSelector";
 
 export default function NovoVideoClient() {
   const { userProfile, loading: authLoading } = useAuth();
@@ -19,7 +21,9 @@ export default function NovoVideoClient() {
   const [url, setUrl] = useState("");
   const [isFree, setIsFree] = useState(true);
   const [allowedPlans, setAllowedPlans] = useState<string[]>([]);
+  const [sessionIds, setSessionIds] = useState<string[]>([]);
   const [availablePlans, setAvailablePlans] = useState<Plan[]>([]);
+  const [newSessionsToSave, setNewSessionsToSave] = useState<Session[]>([]);
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -65,12 +69,22 @@ export default function NovoVideoClient() {
         throw new Error("Selecione pelo menos um plano que terá acesso ao vídeo.");
       }
 
+      // 1. Salvar sessões criadas em memória nesta tela
+      if (newSessionsToSave.length > 0) {
+        const promises = newSessionsToSave.map(session => 
+          workspaceService.addSessionToWorkspace(userProfile.uid, session)
+        );
+        await Promise.all(promises);
+      }
+
+      // 2. Salvar o video no banco de dados com as referencias de sessions
       await contentService.createVideoContent({
         profissional_uid: userProfile.uid,
         title,
         description,
         is_free: isFree,
         allowed_plans: isFree ? [] : allowedPlans,
+        session_ids: sessionIds,
         youtube_id: youtubeId,
       });
 
@@ -94,7 +108,7 @@ export default function NovoVideoClient() {
         {/* Header */}
         <div className="flex items-center mb-8 gap-4 pt-4">
           <Link href={`/${slug}/dashboard`}>
-            <button className="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-800 transition">
+            <button className="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-800 transition-all cursor-pointer hover:scale-110">
               <ArrowLeft className="w-6 h-6" />
             </button>
           </Link>
@@ -166,6 +180,13 @@ export default function NovoVideoClient() {
             </div>
           </div>
 
+          <SessionSelector 
+            professionalId={userProfile?.uid || ""} 
+            selectedSessionIds={sessionIds} 
+            onChange={setSessionIds} 
+            onNewSessionCreated={(session) => setNewSessionsToSave(prev => [...prev, session])}
+          />
+
           {/* Configuração de Acesso */}
           <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8 space-y-6">
             <h3 className="font-bold text-white text-lg border-b border-gray-800 pb-4">
@@ -230,14 +251,14 @@ export default function NovoVideoClient() {
 
           <div className="flex justify-end gap-4 pt-4">
              <Link href={`/${slug}/dashboard`}>
-                <button type="button" className="px-6 py-4 rounded-xl text-gray-400 font-medium hover:text-white transition">
+                <button type="button" className="px-6 py-4 rounded-xl text-gray-400 font-medium hover:text-white transition-all cursor-pointer hover:scale-105">
                   Cancelar
                 </button>
              </Link>
              <button 
                 type="submit"
                 disabled={isSubmitting || success}
-                className="bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold px-8 py-4 rounded-xl flex items-center gap-2 transition-colors disabled:opacity-50"
+                className="bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold px-8 py-4 rounded-xl flex items-center gap-2 transition-all disabled:opacity-50 cursor-pointer hover:scale-[1.02]"
               >
                 {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                 {isSubmitting ? 'Salvando...' : 'Salvar Vídeo'}
