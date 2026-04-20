@@ -80,16 +80,7 @@ export function SessionSelector({ professionalId, selectedSessionIds, onChange, 
       setWorkspace(prev => prev ? {
         ...prev,
         sessions: [...(prev.sessions || []), newSession]
-      } : {
-        id: "temp",
-        professionalId,
-        slug: "",
-        name: "",
-        coverUrl: "",
-        theme: { primary: "", secondary: "" },
-        mpAccessToken: "",
-        sessions: [newSession]
-      });
+      } : null);
 
       // Auto seleciona a recém criada
       onChange([...selectedSessionIds, newSession.id]);
